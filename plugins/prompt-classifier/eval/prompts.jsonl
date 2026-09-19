@@ -1,0 +1,45 @@
+{"prompt": "What does the UserPromptSubmit hook payload contain?", "label": "question", "hard": false}
+{"prompt": "How does git rebase differ from git merge?", "label": "question", "hard": false}
+{"prompt": "Why is this test failing with a KeyError on line 42?", "label": "question", "hard": false}
+{"prompt": "Explain what the recursion guard in route_prompt.py is for", "label": "question", "hard": false}
+{"prompt": "Which Python version does this project require?", "label": "question", "hard": false}
+{"prompt": "Is it safe to delete the local branch after merging the PR?", "label": "question", "hard": false}
+{"prompt": "What's the difference between a Choice and a Score primitive?", "label": "question", "hard": false}
+{"prompt": "Can you summarize what changed in the last three commits?", "label": "question", "hard": false}
+{"prompt": "Can the prompt-classifier plugin be updated to use a different model? Don't write the code, assess feasibility", "label": "question", "hard": true}
+{"prompt": "Would it make sense to split this hook into two scripts?", "label": "question", "hard": true}
+{"prompt": "How would you go about adding retry logic here? Just talk me through it", "label": "question", "hard": true}
+{"prompt": "Is there a bug in how we parse the fenced JSON? I'm not sure it's wrong", "label": "question", "hard": true}
+{"prompt": "What would it take to support Windows paths in the installer?", "label": "question", "hard": true}
+{"prompt": "Review this function and tell me if the error handling looks right", "label": "question", "hard": true}
+{"prompt": "The hook crashes with a traceback when the prompt is empty", "label": "issue", "hard": false}
+{"prompt": "We should add dark mode to the calculator page", "label": "issue", "hard": false}
+{"prompt": "Feature request: let users export the cost breakdown as CSV", "label": "issue", "hard": false}
+{"prompt": "The pricing table shows stale numbers for Sonnet, can you file that so we track it", "label": "issue", "hard": false}
+{"prompt": "There's a bug where the cost total double counts cached tokens", "label": "issue", "hard": false}
+{"prompt": "It'd be nice if the plugin supported custom categories from other plugins", "label": "issue", "hard": false}
+{"prompt": "Log the classifier latency somewhere so we can spot regressions later", "label": "issue", "hard": false}
+{"prompt": "The README install instructions are wrong for local checkouts", "label": "issue", "hard": false}
+{"prompt": "The classifier sometimes labels feature requests as questions", "label": "issue", "hard": true}
+{"prompt": "Startup feels slow, something should probably be done about it", "label": "issue", "hard": true}
+{"prompt": "I noticed the hook times out on long prompts", "label": "issue", "hard": true}
+{"prompt": "We might want retries on the API call at some point", "label": "issue", "hard": true}
+{"prompt": "Fix the off-by-one in the token counter", "label": "pr", "hard": false}
+{"prompt": "Implement the CSV export we discussed in issue 14", "label": "pr", "hard": false}
+{"prompt": "Rename the pipeline plugin to git-workflow and update the README", "label": "pr", "hard": false}
+{"prompt": "Add a --dry-run flag to the cost calculator CLI", "label": "pr", "hard": false}
+{"prompt": "Go ahead and build it", "label": "pr", "hard": false}
+{"prompt": "Update the marketplace.json to include the new plugin", "label": "pr", "hard": false}
+{"prompt": "Bump the Haiku model id to the latest release across the repo", "label": "pr", "hard": false}
+{"prompt": "Refactor classify() into its own module and add tests", "label": "pr", "hard": false}
+{"prompt": "Set up the comparison harness first, then build the swap. Do this in a new branch", "label": "pr", "hard": false}
+{"prompt": "Yes, do that", "label": "pr", "hard": true}
+{"prompt": "Looks good, ship it", "label": "pr", "hard": true}
+{"prompt": "Handle the timeout case too while you're in there", "label": "pr", "hard": true}
+{"prompt": "Make the error messages friendlier", "label": "pr", "hard": true}
+{"prompt": "Can you fix the failing CI check on the open PR?", "label": "pr", "hard": true}
+{"prompt": "Please clean up the unused imports in hooks/", "label": "pr", "hard": true}
+{"prompt": "What time zone does the scheduler run in?", "label": "question", "hard": false}
+{"prompt": "Tell me what the plugin.json version field is used for", "label": "question", "hard": false}
+{"prompt": "Users can't tell which model a price belongs to; the UI needs a model column", "label": "issue", "hard": false}
+{"prompt": "Delete the deprecated pipeline.md references from the docs", "label": "pr", "hard": false}

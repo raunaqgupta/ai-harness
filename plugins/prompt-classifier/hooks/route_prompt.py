@@ -1,40 +1,33 @@
 #!/usr/bin/env python3
 """
 UserPromptSubmit hook: classifies the incoming prompt as a "question", an
-"issue", or a "pr" via a headless `claude -p` call to a cheap/fast model,
-then injects additionalContext nudging the session toward the matching lane
-of the git-workflow pipeline (or a direct answer, for questions). It never
-performs the GitHub actions itself — git-workflow's own pipeline still owns
-opening issues/PRs, this just tells it which lane applies.
+"issue", or a "pr" via a TypeSafe Choice question (see classifiers.py), then
+injects additionalContext nudging the session toward the matching lane of the
+git-workflow pipeline (or a direct answer, for questions). It never performs
+the GitHub actions itself — git-workflow's own pipeline still owns opening
+issues/PRs, this just tells it which lane applies.
 
-Recursion guard: the classification call is itself a `claude -p` invocation,
-which would otherwise re-trigger this same UserPromptSubmit hook. The
-ROUTE_PROMPT_ACTIVE env var is set on the child process and checked first
-thing on entry, so the nested call skips straight through.
+Low-confidence classifications inject nothing: a missing nudge is harmless, a
+wrong one steers the session the wrong way. The threshold defaults to
+MIN_CONFIDENCE and can be overridden with PROMPT_CLASSIFIER_MIN_CONFIDENCE;
+use eval/run_eval.py to pick a value from real data.
 
-Fails soft: any error (missing `claude` on PATH, timeout, malformed model
-output, ...) is logged to stderr and results in no additionalContext being
-injected — the prompt just passes through unclassified rather than blocking.
+Recursion guard: the old backend (and the eval harness's claude backend) run
+`claude -p`, which would otherwise re-trigger this hook. Those calls set
+ROUTE_PROMPT_ACTIVE, which is checked first thing on entry.
+
+Fails soft: any error (missing TYPESAFE_API_KEY, HTTP error, timeout,
+malformed response, ...) is logged to stderr and results in no
+additionalContext being injected — the prompt just passes through
+unclassified rather than blocking.
 """
 import json
 import os
-import re
-import subprocess
 import sys
 
-CLASSIFIER_MODEL = "claude-haiku-4-5-20251001"
-CLASSIFIER_TIMEOUT = 15
+from classifiers import classify_typesafe
 
-CLASSIFY_PROMPT_TEMPLATE = """You are a fast prompt classifier for a coding assistant harness. Classify the user's message below into exactly one category:
-
-- "question": can be answered directly, with no code change or GitHub issue needed.
-- "issue": reports a bug, requests a feature, or describes a problem that should be tracked as a GitHub issue before any code changes happen.
-- "pr": asks to implement or fix something where the work should happen on a branch culminating in a pull request (including continuing already-scoped implementation work).
-
-Respond with ONLY a compact JSON object, no other text, no markdown fences: {{"category": "question|issue|pr"}}
-
-User message:
-{prompt}"""
+MIN_CONFIDENCE = 0.5  # untuned starting point; see eval/run_eval.py
 
 CONTEXT_BY_CATEGORY = {
     "question": (
@@ -58,32 +51,15 @@ def eprint(*args):
     print(*args, file=sys.stderr)
 
 
-def classify(prompt, cwd):
-    env = dict(os.environ)
-    env["ROUTE_PROMPT_ACTIVE"] = "1"
-    res = subprocess.run(
-        [
-            "claude", "-p", CLASSIFY_PROMPT_TEMPLATE.format(prompt=prompt),
-            "--model", CLASSIFIER_MODEL,
-            "--output-format", "json",
-        ],
-        cwd=cwd, env=env, capture_output=True, text=True,
-        timeout=CLASSIFIER_TIMEOUT, stdin=subprocess.DEVNULL,
-    )
-    if res.returncode != 0:
-        raise RuntimeError(f"classifier exited {res.returncode}: {res.stderr[:300]}")
-
-    outer = json.loads(res.stdout)
-    result_text = outer.get("result", "")
-    # Strip markdown fences if the model wrapped its JSON in one anyway.
-    fence_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", result_text, re.DOTALL)
-    inner_text = fence_match.group(1) if fence_match else result_text
-    inner = json.loads(inner_text)
-
-    category = inner.get("category")
-    if category not in CONTEXT_BY_CATEGORY:
-        raise ValueError(f"unexpected category: {category!r}")
-    return category
+def min_confidence():
+    raw = os.environ.get("PROMPT_CLASSIFIER_MIN_CONFIDENCE")
+    if raw is None:
+        return MIN_CONFIDENCE
+    try:
+        return float(raw)
+    except ValueError:
+        eprint(f"route_prompt: ignoring bad PROMPT_CLASSIFIER_MIN_CONFIDENCE {raw!r}")
+        return MIN_CONFIDENCE
 
 
 def main():
@@ -92,15 +68,19 @@ def main():
 
     payload = json.load(sys.stdin)
     prompt = (payload.get("prompt") or "").strip()
-    cwd = payload.get("cwd") or "."
     if not prompt:
         return
 
-    category = classify(prompt, cwd)
+    result = classify_typesafe(prompt)
+    if result.confidence < min_confidence():
+        eprint(f"route_prompt: {result.category} at confidence "
+               f"{result.confidence:.2f} is below threshold; not nudging")
+        return
+
     print(json.dumps({
         "hookSpecificOutput": {
             "hookEventName": "UserPromptSubmit",
-            "additionalContext": CONTEXT_BY_CATEGORY[category],
+            "additionalContext": CONTEXT_BY_CATEGORY[result.category],
         },
     }))
 

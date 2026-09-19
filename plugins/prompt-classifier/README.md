@@ -6,22 +6,27 @@ A Claude Code plugin that classifies every prompt as a **question**, an **issue*
 
 It installs a `UserPromptSubmit` hook (`hooks/route_prompt.py`). On every prompt, the hook:
 
-1. Sends the prompt to a headless `claude -p` call (model: `claude-haiku-4-5-20251001`) asking for a strict classification: `question`, `issue`, or `pr`.
-2. Injects `additionalContext` matching the category:
+1. Sends the prompt to [TypeSafe](https://docs.typesafe.ai)'s `jev-latest` model as a single [Choice](https://docs.typesafe.ai/primitives/choice.md) question over `question` / `issue` / `pr` (`hooks/classifiers.py`). The response carries a probability per category and a confidence value.
+2. If confidence is at or above the threshold, injects `additionalContext` matching the category:
    - **question** — answer directly, no issue/PR needed.
    - **issue** — clarify if needed, then open a GitHub issue before making any code changes.
    - **pr** — make sure an issue exists (open one first if not), then branch, implement, and open a PR referencing it.
+3. Below the threshold it injects nothing: a missing nudge is harmless, a wrong one steers the session the wrong way.
 
 The hook only classifies and nudges — it never calls `gh` itself. Opening the actual issue/PR is still owned by whatever pipeline is in effect (e.g. `git-workflow`'s injected instructions, or a repo's own `CLAUDE.md`).
 
-## Recursion guard
+## Confidence threshold
 
-The classification call is itself a `claude -p` invocation, which would otherwise re-trigger this same `UserPromptSubmit` hook on the nested session. The hook sets `ROUTE_PROMPT_ACTIVE=1` on that child process's environment and checks it first thing on entry, so the nested call skips straight through instead of classifying itself.
+Defaults to `0.5` (`MIN_CONFIDENCE` in `route_prompt.py`), an untuned starting point. Override with the `PROMPT_CLASSIFIER_MIN_CONFIDENCE` environment variable. Run the [comparison harness](#comparison-harness) to see the coverage/accuracy trade-off on labeled prompts and pick a value.
+
+## Privacy
+
+Every prompt you submit is sent to TypeSafe's API (`https://api.typesafe.ai`) for classification. Do not install this plugin if that is not acceptable for the work you do in Claude Code.
 
 ## Requirements
 
-- `claude` CLI on `PATH`, able to run headless (`claude -p`).
-- `python3` on `PATH`.
+- `TYPESAFE_API_KEY` in the environment Claude Code runs in (create one at [console.typesafe.ai](https://console.typesafe.ai/)). Without it the hook does nothing.
+- `python3` on `PATH`. No third-party Python packages — the hook uses the standard library's `urllib`.
 
 ## Install
 
@@ -37,7 +42,28 @@ claude plugin marketplace add /path/to/ai-harness
 claude plugin install prompt-classifier@ai-harness
 ```
 
+## Comparison harness
+
+`eval/run_eval.py` runs a labeled prompt set (`eval/prompts.jsonl`) through both backends — TypeSafe and the original headless `claude -p` call to Haiku — and reports:
+
+- accuracy overall and split into `clear` / `hard` (ambiguous) prompts
+- confusion matrix, mismatches, and errors
+- latency p50 / p95 / mean
+- for TypeSafe, accuracy vs. coverage at each confidence threshold
+- where the two backends disagree
+
+```
+python3 plugins/prompt-classifier/eval/run_eval.py                      # both backends
+python3 plugins/prompt-classifier/eval/run_eval.py --backends typesafe  # one backend
+python3 plugins/prompt-classifier/eval/run_eval.py --out results.json   # save raw results
+```
+
+It runs sequentially by default so latency isn't distorted by concurrency (`--workers N` speeds it up). The `typesafe` backend is skipped with a message if `TYPESAFE_API_KEY` is unset; the `claude` backend needs the `claude` CLI on `PATH`.
+
+The labels in `prompts.jsonl` are one person's judgment against the category definitions in `hooks/classifiers.py`; ambiguous prompts are marked `"hard": true`. Edit the file or add prompts from your own history — the more it resembles what you actually type, the more the numbers mean. Both backends are built from the same category descriptions so the comparison measures the backend, not the wording.
+
 ## Notes
 
-- Fails soft: any error (missing `claude` on `PATH`, timeout, malformed classifier output, ...) is logged to stderr and results in no `additionalContext` being injected — the prompt just passes through unclassified rather than blocking.
-- Adds a headless model call's worth of latency and cost to every prompt. Pair with `git-workflow` for the actual issue/PR pipeline; on its own this plugin only classifies.
+- Fails soft: any error (missing key, HTTP 401/422/429/529, timeout, malformed response, ...) is logged to stderr and results in no `additionalContext` being injected — the prompt just passes through unclassified rather than blocking. There are no retries: the hook is on the critical path of every prompt.
+- `ROUTE_PROMPT_ACTIVE` still short-circuits the hook. The hook itself no longer spawns Claude, but the harness's `claude` backend does, and the guard stops that nested session from triggering this hook.
+- Adds one network round trip to every prompt. Pair with `git-workflow` for the actual issue/PR pipeline; on its own this plugin only classifies.
