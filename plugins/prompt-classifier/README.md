@@ -25,8 +25,9 @@ Every prompt you submit is sent to TypeSafe's API (`https://api.typesafe.ai`) fo
 
 ## Requirements
 
-- `TYPESAFE_API_KEY` in the environment Claude Code runs in (create one at [console.typesafe.ai](https://console.typesafe.ai/)). Without it the hook does nothing.
+- A TypeSafe API key (create one at [console.typesafe.ai](https://console.typesafe.ai/)). Claude Code asks for it when you enable the plugin — see [Setup](#setup).
 - `python3` on `PATH`. No third-party Python packages — the hook uses the standard library's `urllib`.
+- Claude Code v2.1.271 or later (plugin `userConfig` support).
 
 ## Install
 
@@ -41,6 +42,18 @@ Or point at a local checkout:
 claude plugin marketplace add /path/to/ai-harness
 claude plugin install prompt-classifier@ai-harness
 ```
+
+## Setup
+
+The plugin declares a `typesafe_api_key` option (`userConfig` in `plugin.json`, marked `sensitive`). Claude Code prompts for it when the plugin is enabled, masks the input, and stores it in secure storage (the macOS Keychain, falling back to `~/.claude/.credentials.json`) rather than in `settings.json`. It is passed to the hook as `CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY`.
+
+For a scripted install, supply it up front:
+
+```
+claude plugin install prompt-classifier@ai-harness --config typesafe_api_key=<your key>
+```
+
+The plugin reads only that option. It deliberately ignores a `TYPESAFE_API_KEY` environment variable, so a key used for other tools is never picked up by accident. Without a key the hook does nothing.
 
 ## Comparison harness
 
@@ -58,7 +71,7 @@ python3 plugins/prompt-classifier/eval/run_eval.py --backends typesafe  # one ba
 python3 plugins/prompt-classifier/eval/run_eval.py --out results.json   # save raw results
 ```
 
-It runs sequentially by default so latency isn't distorted by concurrency (`--workers N` speeds it up). The `typesafe` backend is skipped with a message if `TYPESAFE_API_KEY` is unset; the `claude` backend needs the `claude` CLI on `PATH`.
+It runs sequentially by default so latency isn't distorted by concurrency (`--workers N` speeds it up). Outside Claude Code there is no `userConfig` to supply the key, so export it as `CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY` for the run. The `typesafe` backend is skipped with a message if that is unset; the `claude` backend needs the `claude` CLI on `PATH`.
 
 The labels in `prompts.jsonl` are one person's judgment against the category definitions in `hooks/classifiers.py`; ambiguous prompts are marked `"hard": true`. Edit the file or add prompts from your own history — the more it resembles what you actually type, the more the numbers mean. Both backends are built from the same category descriptions so the comparison measures the backend, not the wording.
 

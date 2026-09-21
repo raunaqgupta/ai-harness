@@ -13,7 +13,8 @@ between backends.
 
 Runs sequentially by default so latency numbers aren't distorted by
 concurrency; use --workers to speed up (latency is then only indicative).
-The typesafe backend needs TYPESAFE_API_KEY; the claude backend needs `claude`
+The typesafe backend needs the key in CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY (the
+variable Claude Code sets for hooks); the claude backend needs `claude`
 on PATH.
 """
 import argparse
@@ -43,8 +44,8 @@ def load_dataset(path, limit):
 
 def backend_fn(name):
     if name == "typesafe":
-        if not os.environ.get("TYPESAFE_API_KEY"):
-            return None, "TYPESAFE_API_KEY is not set"
+        if not os.environ.get(classifiers.API_KEY_ENV):
+            return None, f"{classifiers.API_KEY_ENV} is not set"
         return classifiers.classify_typesafe, None
     if name == "claude":
         return lambda p: classifiers.classify_claude(p, cwd=str(HERE)), None

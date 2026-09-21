@@ -37,6 +37,9 @@ CATEGORIES = {
     ),
 }
 
+# Claude Code exports the plugin's `userConfig` values to hook processes as
+# CLAUDE_PLUGIN_OPTION_<KEY>; see typesafe_api_key in plugin.json.
+API_KEY_ENV = "CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY"
 TYPESAFE_URL = "https://api.typesafe.ai/v1/systemone"
 TYPESAFE_MODEL = "jev-latest"
 TYPESAFE_TIMEOUT = 10
@@ -57,9 +60,12 @@ class Result:
 
 
 def classify_typesafe(prompt, timeout=TYPESAFE_TIMEOUT):
-    api_key = os.environ.get("TYPESAFE_API_KEY")
+    api_key = os.environ.get(API_KEY_ENV)
     if not api_key:
-        raise ClassifierError("TYPESAFE_API_KEY is not set")
+        raise ClassifierError(
+            f"no TypeSafe API key ({API_KEY_ENV} is unset); "
+            "set typesafe_api_key when enabling the plugin"
+        )
 
     body = json.dumps({
         "state": prompt,

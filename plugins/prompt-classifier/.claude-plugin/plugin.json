@@ -7,5 +7,14 @@
   "homepage": "https://github.com/raunaqgupta/ai-harness",
   "repository": "https://github.com/raunaqgupta/ai-harness",
   "license": "GPL-3.0",
+  "userConfig": {
+    "typesafe_api_key": {
+      "type": "string",
+      "title": "TypeSafe API key",
+      "description": "Used to classify each prompt via TypeSafe. Create one at https://console.typesafe.ai/",
+      "sensitive": true,
+      "required": true
+    }
+  },
   "keywords": ["hooks", "routing", "classification", "github", "issues", "pull-request"]
 }

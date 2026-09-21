@@ -16,7 +16,7 @@ Recursion guard: the old backend (and the eval harness's claude backend) run
 `claude -p`, which would otherwise re-trigger this hook. Those calls set
 ROUTE_PROMPT_ACTIVE, which is checked first thing on entry.
 
-Fails soft: any error (missing TYPESAFE_API_KEY, HTTP error, timeout,
+Fails soft: any error (missing API key, HTTP error, timeout,
 malformed response, ...) is logged to stderr and results in no
 additionalContext being injected — the prompt just passes through
 unclassified rather than blocking.
