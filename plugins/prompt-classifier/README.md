@@ -1,16 +1,17 @@
 # prompt-classifier
 
-A Claude Code plugin that classifies every prompt as a **question**, an **issue**, or a **pr**, and nudges the session toward the matching lane of the [git-workflow](../git-workflow/README.md) pipeline — without performing any GitHub actions itself.
+A Claude Code plugin that classifies every prompt as a **question**, an **issue**, a **pr**, or **other**, and nudges the session toward the matching lane of the [git-workflow](../git-workflow/README.md) pipeline — without performing any GitHub actions itself.
 
 ## What it does
 
 It installs a `UserPromptSubmit` hook (`hooks/route_prompt.py`). On every prompt, the hook:
 
-1. Sends the prompt to [TypeSafe](https://docs.typesafe.ai)'s `jev-latest` model as a single [Choice](https://docs.typesafe.ai/primitives/choice.md) question over `question` / `issue` / `pr` (`hooks/classifiers.py`). The response carries a probability per category and a confidence value.
+1. Sends the prompt to [TypeSafe](https://docs.typesafe.ai)'s `jev-latest` model as a single [Choice](https://docs.typesafe.ai/primitives/choice.md) question over `question` / `issue` / `pr` / `other` (`hooks/classifiers.py`). The response carries a probability per category and a confidence value.
 2. If confidence is at or above the threshold, injects `additionalContext` matching the category:
    - **question** — answer directly, no issue/PR needed.
    - **issue** — clarify if needed, then open a GitHub issue before making any code changes.
    - **pr** — make sure an issue exists (open one first if not), then branch, implement, and open a PR referencing it.
+   - **other** — thanks, acknowledgments, status reports and pasted output; nothing is injected.
 3. Below the threshold it injects nothing: a missing nudge is harmless, a wrong one steers the session the wrong way.
 
 The hook only classifies and nudges — it never calls `gh` itself. Opening the actual issue/PR is still owned by whatever pipeline is in effect (e.g. `git-workflow`'s injected instructions, or a repo's own `CLAUDE.md`).

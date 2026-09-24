@@ -28,12 +28,19 @@ CATEGORIES = {
     ),
     "issue": (
         "Reports a bug, requests a feature, or describes a problem that should be "
-        "tracked as a GitHub issue before any code changes happen."
+        "tracked as a GitHub issue before any code changes happen. A bare "
+        "\"add X\" request for new functionality is a feature request."
     ),
     "pr": (
         "Asks to implement or fix something where the work should happen on a "
         "branch culminating in a pull request, including continuing "
         "already-scoped implementation work."
+    ),
+    "other": (
+        "Not a request for the assistant to do or explain anything: thanks, a "
+        "status report, pasted output or a stray reply that needs no workflow. "
+        "Approvals that tell the assistant to proceed (\"go ahead\", \"ship "
+        "it\") are not other; they continue already-scoped work."
     ),
 }
 

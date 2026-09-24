@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 UserPromptSubmit hook: classifies the incoming prompt as a "question", an
-"issue", or a "pr" via a TypeSafe Choice question (see classifiers.py), then
+"issue", a "pr", or "other" via a TypeSafe Choice question (see classifiers.py), then
 injects additionalContext nudging the session toward the matching lane of the
-git-workflow pipeline (or a direct answer, for questions). It never performs
+git-workflow pipeline (or a direct answer, for questions). "other" (thanks,
+acknowledgments, status reports) injects nothing. It never performs
 the GitHub actions itself — git-workflow's own pipeline still owns opening
 issues/PRs, this just tells it which lane applies.
 
@@ -72,6 +73,8 @@ def main():
         return
 
     result = classify_typesafe(prompt)
+    if result.category not in CONTEXT_BY_CATEGORY:
+        return  # "other": nothing to steer
     if result.confidence < min_confidence():
         eprint(f"route_prompt: {result.category} at confidence "
                f"{result.confidence:.2f} is below threshold; not nudging")
