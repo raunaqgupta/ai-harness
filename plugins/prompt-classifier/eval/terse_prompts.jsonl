@@ -1,0 +1,125 @@
+{"prompt": "why is it slow?", "label": "question", "hard": false}
+{"prompt": "what does this do?", "label": "question", "hard": false}
+{"prompt": "is this thread-safe?", "label": "question", "hard": false}
+{"prompt": "how do I revert?", "label": "question", "hard": false}
+{"prompt": "what's the difference?", "label": "question", "hard": false}
+{"prompt": "which one is faster?", "label": "question", "hard": false}
+{"prompt": "explain the retry logic", "label": "question", "hard": false}
+{"prompt": "where is auth handled?", "label": "question", "hard": false}
+{"prompt": "does this support pagination?", "label": "question", "hard": false}
+{"prompt": "what changed in v2?", "label": "question", "hard": false}
+{"prompt": "how does caching work here?", "label": "question", "hard": false}
+{"prompt": "what's a monad?", "label": "question", "hard": false}
+{"prompt": "why am I getting a 404?", "label": "question", "hard": false}
+{"prompt": "what port does it use?", "label": "question", "hard": false}
+{"prompt": "is it safe to delete this?", "label": "question", "hard": false}
+{"prompt": "how many tests are there?", "label": "question", "hard": false}
+{"prompt": "what does --force do?", "label": "question", "hard": false}
+{"prompt": "who calls this function?", "label": "question", "hard": false}
+{"prompt": "what's the time complexity?", "label": "question", "hard": false}
+{"prompt": "does it handle unicode?", "label": "question", "hard": false}
+{"prompt": "can this run on windows?", "label": "question", "hard": false}
+{"prompt": "what's your take on ORMs?", "label": "question", "hard": false}
+{"prompt": "how do hooks fire?", "label": "question", "hard": false}
+{"prompt": "which python version is this?", "label": "question", "hard": false}
+{"prompt": "is this idempotent?", "label": "question", "hard": false}
+{"prompt": "what does exit code 2 mean?", "label": "question", "hard": false}
+{"prompt": "how big is the repo?", "label": "question", "hard": false}
+{"prompt": "what did that commit change?", "label": "question", "hard": false}
+{"prompt": "is that a bug?", "label": "question", "hard": true}
+{"prompt": "can we use redis?", "label": "question", "hard": true}
+{"prompt": "should this be async?", "label": "question", "hard": true}
+{"prompt": "any downside to this?", "label": "question", "hard": true}
+{"prompt": "is there a simpler way?", "label": "question", "hard": true}
+{"prompt": "why did CI fail?", "label": "question", "hard": true}
+{"prompt": "login button broken", "label": "issue", "hard": false}
+{"prompt": "add dark mode", "label": "issue", "hard": false}
+{"prompt": "crash on empty input", "label": "issue", "hard": false}
+{"prompt": "typo in README", "label": "issue", "hard": false}
+{"prompt": "support CSV export", "label": "issue", "hard": false}
+{"prompt": "search returns nothing", "label": "issue", "hard": false}
+{"prompt": "need rate limiting", "label": "issue", "hard": false}
+{"prompt": "memory leak in worker", "label": "issue", "hard": false}
+{"prompt": "add pagination", "label": "issue", "hard": false}
+{"prompt": "dates show wrong timezone", "label": "issue", "hard": false}
+{"prompt": "logout doesn't clear session", "label": "issue", "hard": false}
+{"prompt": "add SSO support", "label": "issue", "hard": false}
+{"prompt": "images not loading on safari", "label": "issue", "hard": false}
+{"prompt": "missing alt text", "label": "issue", "hard": false}
+{"prompt": "duplicate emails sent", "label": "issue", "hard": false}
+{"prompt": "export to PDF please", "label": "issue", "hard": false}
+{"prompt": "need a health endpoint", "label": "issue", "hard": false}
+{"prompt": "app freezes on large files", "label": "issue", "hard": false}
+{"prompt": "wrong total in cart", "label": "issue", "hard": false}
+{"prompt": "add keyboard shortcuts", "label": "issue", "hard": false}
+{"prompt": "tooltip cut off on mobile", "label": "issue", "hard": false}
+{"prompt": "add webhook support", "label": "issue", "hard": false}
+{"prompt": "API returns 500 on bad JSON", "label": "issue", "hard": false}
+{"prompt": "sorting is inconsistent", "label": "issue", "hard": false}
+{"prompt": "need bulk delete", "label": "issue", "hard": false}
+{"prompt": "spinner never stops", "label": "issue", "hard": false}
+{"prompt": "add i18n", "label": "issue", "hard": false}
+{"prompt": "can't paste into the field", "label": "issue", "hard": false}
+{"prompt": "slow startup", "label": "issue", "hard": true}
+{"prompt": "docs are outdated", "label": "issue", "hard": true}
+{"prompt": "flaky test in auth", "label": "issue", "hard": true}
+{"prompt": "should log errors to sentry", "label": "issue", "hard": true}
+{"prompt": "wish it had undo", "label": "issue", "hard": true}
+{"prompt": "fix the typo", "label": "pr", "hard": false}
+{"prompt": "rename foo to bar", "label": "pr", "hard": false}
+{"prompt": "bump deps", "label": "pr", "hard": false}
+{"prompt": "implement that", "label": "pr", "hard": false}
+{"prompt": "add the tests", "label": "pr", "hard": false}
+{"prompt": "remove dead code", "label": "pr", "hard": false}
+{"prompt": "refactor the auth module", "label": "pr", "hard": false}
+{"prompt": "make the button blue", "label": "pr", "hard": false}
+{"prompt": "add a --verbose flag", "label": "issue", "hard": false}
+{"prompt": "update the readme", "label": "pr", "hard": false}
+{"prompt": "apply that patch", "label": "pr", "hard": false}
+{"prompt": "fix lint errors", "label": "pr", "hard": false}
+{"prompt": "extract into a helper", "label": "pr", "hard": false}
+{"prompt": "add logging here", "label": "pr", "hard": false}
+{"prompt": "use async instead", "label": "pr", "hard": false}
+{"prompt": "fix the failing test", "label": "pr", "hard": false}
+{"prompt": "delete the old config", "label": "pr", "hard": false}
+{"prompt": "wire up the endpoint", "label": "pr", "hard": false}
+{"prompt": "add types", "label": "pr", "hard": false}
+{"prompt": "make it retry 3 times", "label": "pr", "hard": false}
+{"prompt": "move this to utils", "label": "pr", "hard": false}
+{"prompt": "inline that function", "label": "pr", "hard": false}
+{"prompt": "change timeout to 30s", "label": "pr", "hard": false}
+{"prompt": "add error handling", "label": "issue", "hard": false}
+{"prompt": "commit and open a PR", "label": "pr", "hard": false}
+{"prompt": "fix #12", "label": "pr", "hard": false}
+{"prompt": "upgrade to python 3.12", "label": "pr", "hard": false}
+{"prompt": "go ahead", "label": "pr", "hard": true}
+{"prompt": "do it", "label": "pr", "hard": true}
+{"prompt": "continue", "label": "pr", "hard": true}
+{"prompt": "yes, ship it", "label": "pr", "hard": true}
+{"prompt": "now do the same for orders", "label": "pr", "hard": true}
+{"prompt": "fix it", "label": "pr", "hard": true}
+{"prompt": "thanks", "label": "other", "hard": false}
+{"prompt": "ok", "label": "other", "hard": false}
+{"prompt": "got it", "label": "other", "hard": false}
+{"prompt": "cool", "label": "other", "hard": false}
+{"prompt": "lgtm", "label": "other", "hard": false}
+{"prompt": "nice", "label": "other", "hard": false}
+{"prompt": "thank you!", "label": "other", "hard": false}
+{"prompt": "perfect", "label": "other", "hard": false}
+{"prompt": "yep", "label": "other", "hard": true}
+{"prompt": "nope", "label": "other", "hard": true}
+{"prompt": "hmm", "label": "other", "hard": false}
+{"prompt": "ok thanks", "label": "other", "hard": false}
+{"prompt": "version: 2.0.0", "label": "other", "hard": true}
+{"prompt": "done", "label": "other", "hard": true}
+{"prompt": "looks good", "label": "other", "hard": false}
+{"prompt": "great", "label": "other", "hard": false}
+{"prompt": "interesting", "label": "other", "hard": false}
+{"prompt": "never mind", "label": "other", "hard": false}
+{"prompt": "sounds good", "label": "other", "hard": false}
+{"prompt": "k", "label": "other", "hard": false}
+{"prompt": "exit code 0", "label": "other", "hard": true}
+{"prompt": "tests passed", "label": "other", "hard": true}
+{"prompt": "back", "label": "other", "hard": false}
+{"prompt": "brb", "label": "other", "hard": false}
+{"prompt": "it works now", "label": "other", "hard": false}
