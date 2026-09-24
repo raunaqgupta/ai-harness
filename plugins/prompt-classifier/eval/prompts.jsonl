@@ -27,7 +27,7 @@
 {"prompt": "Fix the off-by-one in the token counter", "label": "pr", "hard": false}
 {"prompt": "Implement the CSV export we discussed in issue 14", "label": "pr", "hard": false}
 {"prompt": "Rename the pipeline plugin to git-workflow and update the README", "label": "pr", "hard": false}
-{"prompt": "Add a --dry-run flag to the cost calculator CLI", "label": "pr", "hard": false}
+{"prompt": "Add a --dry-run flag to the cost calculator CLI", "label": "issue", "hard": false}
 {"prompt": "Go ahead and build it", "label": "pr", "hard": false}
 {"prompt": "Update the marketplace.json to include the new plugin", "label": "pr", "hard": false}
 {"prompt": "Bump the Haiku model id to the latest release across the repo", "label": "pr", "hard": false}
